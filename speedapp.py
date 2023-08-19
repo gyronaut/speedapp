@@ -1,6 +1,7 @@
 import os
-from flask import Flask, request, render_template, redirect 
+from flask import Flask, request, render_template, redirect, jsonify
 import urllib
+import requests as pyreq
 
 app = Flask(__name__)
 
@@ -11,7 +12,7 @@ REDIRECT_URI = 'http://gyronautilus.com/speedapp/strava_redirect'
 
 @app.route("/")
 def test():
-    	testpost = {'heading': "testing title", 'body': 'testing body'}
+	testpost = {'heading': "testing title", 'body': 'testing body'}
 	return render_template('index.html', post=testpost)
 
 @app.route("/strava_redirect")
@@ -19,7 +20,7 @@ def init():
 	activities = {}
 	return render_template('loggedin.html',activities=activities)
 
-@app.route("/strava_auth", methods=['GET'])
+@app.route("/auth", methods=['GET'])
 def authorize():
 	url = 'https://www.strava.com/oauth/authorize'
 	params = {
@@ -28,7 +29,24 @@ def authorize():
 		'response_type': 'code',
 		'scope': 'activity:read_all'
 		}
-	return redirect('{}?{}'.format(url, urlib.urlencode(params)))
+	return redirect('{}?{}'.format(url, urllib.urlencode(params)))
+
+@app.route("/token", methods=['GET'])
+def return_token():
+	code = request.args.get('code')
+	if not code:
+		return "Missing code parameter!", 400
+	strava_req = pyreq.post(
+		'https://www.strava.com/oauth/token',
+		data={
+			'client_id': CLIENT_ID,
+            'client_secret': CLIENT_SECRET,
+            'code': code,
+            'grant_type': 'authorization_code'
+        }
+	)
+	return jsonify(strava_req)
+	
 
 @app.route("/webhook",methods=['POST', 'GET'])
 def webhook():
