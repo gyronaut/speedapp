@@ -8,17 +8,22 @@ app = Flask(__name__)
 
 CLIENT_ID = os.environ.get('STRAVA_CLIENT_ID')
 CLIENT_SECRET = os.environ.get('STRAVA_CLIENT_SECRET')
-REDIRECT_URI = 'http://gyronautilus.com/speedapp/strava_redirect'
+REDIRECT_URI = 'http://gyronautilus.com/speedapp/loggedin'
 
 @app.route("/")
 def test():
 	testpost = {'heading': "testing title", 'body': 'testing body'}
 	return render_template('index.html', post=testpost)
 
-@app.route("/strava_redirect")
+@app.route("/loggedin", methods=['POST'])
 def init():
 	activities = {}
-	return render_template('loggedin.html',activities=activities)
+	name = 'No Name!'
+	if request.method == "POST":
+		athlete = request.args.get("athlete")
+		if athlete:
+			name = athlete
+	return render_template('loggedin.html',name=name,activities=activities)
 
 @app.route("/auth", methods=['GET'])
 def authorize():
@@ -63,7 +68,7 @@ def webhook():
 				response = {"hub.challenge": challenge}
 				return response, 200
 			else:
-				return '', 403
+				return 'Authorization denied! token mismatch', 403
 
 if __name__ == "__main__":
 	app.run()
