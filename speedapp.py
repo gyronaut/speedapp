@@ -18,6 +18,15 @@ def exchange_token(code):
 	)
 	return strava_req
 
+def get_activities(access_token):
+	strava_req = pyreq.get(
+		'https://www.strava.com/api/v3/athlete/activities?per_page=30',
+		headers={
+			'accept': 'application/json',
+			'authorization': 'Bearer '+access_token
+		}
+	)
+
 @app.route("/")
 def test():
 	testpost = {'heading': "testing title", 'body': 'testing body'}
@@ -34,6 +43,8 @@ def init():
 		strava_response = exchange_token(code).json()
 		name = strava_response['athlete']['firstname']
 		userid = strava_response['athlete']['id']
+		access_token = strava_response['access_token']
+		activities = get_activities(access_token)
 	return render_template('loggedin.html',name=name,activities=activities)
 
 @app.route("/auth", methods=['GET'])

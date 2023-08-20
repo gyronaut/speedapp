@@ -4,4 +4,7 @@
 
 {% block content %}
     <h1> Welcome {{ name }}!</h1>
+    {% for activity in activities %}
+        <p> {{activity['start_date']}} {{activity['name']}} {{activity['type']}}</p>
+    {% endfor %}
 {% endblock %}
