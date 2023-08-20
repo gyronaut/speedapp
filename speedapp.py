@@ -6,10 +6,6 @@ import init
 
 app = init.create_app()
 
-CLIENT_ID = os.environ.get('STRAVA_CLIENT_ID')
-CLIENT_SECRET = os.environ.get('STRAVA_CLIENT_SECRET')
-REDIRECT_URI = 'http://www.gyronautilus.com/speedapp/loggedin'
-
 def exchange_token(code):
 	strava_req = pyreq.post(
 		'https://www.strava.com/oauth/token',
