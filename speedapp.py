@@ -26,6 +26,7 @@ def get_activities(access_token):
 			'authorization': 'Bearer '+access_token
 		}
 	)
+	return strava_req
 
 @app.route("/")
 def test():
@@ -34,7 +35,7 @@ def test():
 
 @app.route("/loggedin", methods=['GET'])
 def init():
-	activities = {}
+	activities = [{'date': '2023-01-01', 'name': 'test', 'type':'ride test'}]
 	name = 'No Name!'
 	if request.method == "GET":
 		code = request.args.get('code')
