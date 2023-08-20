@@ -2,13 +2,25 @@ import os
 from flask import Flask, request, render_template, redirect, jsonify
 import urllib
 import requests as pyreq
+import init
 
-app = Flask(__name__)
-
+app = init.create_app()
 
 CLIENT_ID = os.environ.get('STRAVA_CLIENT_ID')
 CLIENT_SECRET = os.environ.get('STRAVA_CLIENT_SECRET')
 REDIRECT_URI = 'http://www.gyronautilus.com/speedapp/loggedin'
+
+def exchange_token(code):
+	strava_req = pyreq.post(
+		'https://www.strava.com/oauth/token',
+		data={
+				'client_id': app.config['CLIENT_ID'],
+            	'client_secret': app.config['CLIENT_SECRET'],
+            	'code': code,
+            	'grant_type': 'authorization_code'
+        	}
+	)
+	return strava_req
 
 @app.route("/")
 def test():
@@ -32,41 +44,12 @@ def init():
 def authorize():
 	url = 'https://www.strava.com/oauth/authorize'
 	params = {
-		'client_id': CLIENT_ID,
-		'redirect_uri': REDIRECT_URI,
+		'client_id': app.config['CLIENT_ID'],
+		'redirect_uri': app.config['REDIRECT_URI'],
 		'response_type': 'code',
 		'scope': 'activity:read_all'
 		}
 	return redirect('{}?{}'.format(url, urllib.urlencode(params)))
-
-def exchange_token(code):
-	strava_req = pyreq.post(
-		'https://www.strava.com/oauth/token',
-		data={
-			'client_id': CLIENT_ID,
-            		'client_secret': CLIENT_SECRET,
-            		'code': code,
-            		'grant_type': 'authorization_code'
-        	}
-	)
-	return strava_req
-
-@app.route("/webhook",methods=['POST', 'GET'])
-def webhook():
-	if request.method == 'POST':
-		print("Recieved data from webhook: ", request.json)
-		return "received webhook", 200
-	if request.method == 'GET':
-		VERIFY_TOKEN = "stravatokenshhh"
-		mode = request.args.get('hub.mode')
-		token = request.args.get('hub.verify_token')
-		challenge = request.args.get('hub.challenge')
-		if(mode and token):
-			if(mode == 'subscribe' and token == VERIFY_TOKEN):
-				response = {"hub.challenge": challenge}
-				return response, 200
-			else:
-				return 'Authorization denied! token mismatch', 403
 
 if __name__ == "__main__":
 	app.run()
