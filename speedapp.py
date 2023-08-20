@@ -45,7 +45,7 @@ def init():
 		name = strava_response['athlete']['firstname']
 		userid = strava_response['athlete']['id']
 		access_token = strava_response['access_token']
-		activities = get_activities(access_token)
+		activities = get_activities(access_token).json()
 	return render_template('loggedin.html',name=name,activities=activities)
 
 @app.route("/auth", methods=['GET'])
