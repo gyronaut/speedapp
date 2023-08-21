@@ -38,20 +38,20 @@ def splash():
 def loggedin(user_id = None):
 	activities = []
 	name = 'No Name!'
-	if request.method == "GET":
-		code = request.args.get('code')
-		if not code:
-			return "Missing code parameter!", 400		
-		strava_response = exchange_token(code).json()
-		name = strava_response['athlete']['firstname']
-		strava_user_id = strava_response['athlete']['id']
-		access_token = strava_response['access_token']
-		# store name, id, and user token in db
-		return redirect(url_for("loggedin", user_id = strava_user_id))
 	if not user_id:
+		if request.method == "GET":
+			code = request.args.get('code')
+			if not code:
+				return "Missing code parameter!", 400		
+			strava_response = exchange_token(code).json()
+			name = strava_response['athlete']['firstname']
+			strava_user_id = strava_response['athlete']['id']
+			access_token = strava_response['access_token']
+			# store name, id, and user token in db
+			return redirect(url_for("loggedin", user_id = strava_user_id))
 		return redirect(url_for("splash"))
 	# get name and access token from db
-	name = ""
+	name = "test"
 	access_token = ""
 	activities = get_activities(access_token).json()
 	return render_template("loggedin.html", name=name, activities=activities)
