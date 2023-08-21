@@ -4,7 +4,20 @@
 
 {% block content %}
     <h1> Welcome {{ name }}!</h1>
+    <table>
+        <tr>
+            <th> Date </th>
+            <th> Activity Name </th>
+            <th> Activity Type </th>
+            <th> Elapsed Time </th>
+        </tr>
     {% for activity in activities %}
-        <p> {{activity['start_date']}} {{activity['name']}} {{activity['type']}}</p>
+        <tr>
+            <th>{{activity['start_date']}}</th>
+            <th>{{activity['name']}}</th>
+            <th>{{activity['type']}}</th>
+            <th>{{activity['elapsed_time']}}</th>
+        </tr>
     {% endfor %}
+    </table>
 {% endblock %}

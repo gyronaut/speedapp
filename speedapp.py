@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, render_template, redirect, jsonify
+from flask import Flask, request, render_template, redirect, jsonify, url_for
 import urllib
 import requests as pyreq
 import init
@@ -29,13 +29,14 @@ def get_activities(access_token):
 	return strava_req
 
 @app.route("/")
-def test():
+def splash():
 	testpost = {'heading': "testing title", 'body': 'testing body'}
 	return render_template('splash.html', post=testpost)
 
+@app.route("/loggedin/<int:user_id>")
 @app.route("/loggedin", methods=['GET'])
-def init():
-	activities = [{'date': '2023-01-01', 'name': 'test', 'type':'ride test'}]
+def loggedin(user_id = None):
+	activities = []
 	name = 'No Name!'
 	if request.method == "GET":
 		code = request.args.get('code')
@@ -43,10 +44,19 @@ def init():
 			return "Missing code parameter!", 400		
 		strava_response = exchange_token(code).json()
 		name = strava_response['athlete']['firstname']
-		userid = strava_response['athlete']['id']
+		strava_user_id = strava_response['athlete']['id']
 		access_token = strava_response['access_token']
-		activities = get_activities(access_token).json()
-	return render_template('loggedin.html',name=name,activities=activities)
+		# store name, id, and user token in db
+		return redirect(url_for("loggedin", user_id = strava_user_id))
+	if not user_id:
+		return redirect(url_for("splash"))
+	# get name and access token from db
+	name = ""
+	access_token = ""
+	activities = get_activities(access_token).json()
+	return render_template("loggedin.html", name=name, activities=activities)
+
+
 
 @app.route("/auth", methods=['GET'])
 def authorize():
