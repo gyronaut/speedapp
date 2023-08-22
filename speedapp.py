@@ -24,7 +24,7 @@ def token_expired(user):
 def refresh_token(user):
 	return user
 
-def get_activities(user, page):
+def get_activities(user, page, activities_per_page):
 	if token_expired(user):
 		user = refresh_token(user)
 	access_token = user['access_token']
@@ -35,7 +35,7 @@ def get_activities(user, page):
 			'authorization': 'Bearer '+access_token
 		},
 		params = {
-			'per-page':30,
+			'per-page':activities_per_page,
 			'page':page
 		}
 	)
@@ -74,7 +74,7 @@ def loggedin():
 		refresh_token = strava_response['refresh_token']
 		expires_at = strava_response['expires_at']
 		session['id'] = strava_user_id
-		session['activity_page'] = 1
+		session['activities_per_page'] = 30
 		# store user info in db
 		db.store_user(name, strava_user_id, access_token, refresh_token, expires_at)
 		return redirect(url_for("activities", page=1))
@@ -88,11 +88,11 @@ def activities(page):
 	user = db.fetch_user(session['id'])
 	if not user:
 		return redirect('/splash')
-	activities = get_activities(user, page).json()
-	return render_template("loggedin.html", name=name, activities=activities)
+	activities = get_activities(user, page, session['activities_per_page']).json()
+	return render_template("loggedin.html", page=page, name=name, activities=activities)
 
-@app.route("activities/<int:page>/<int:activity_id>", methods=['POST'])
-def show_activity(page, activity_id):
+@app.route("/_show_activity/<int:activity_id>", methods=['POST'])
+def show_activity( activity_id):
 	user = db.fetch_user(session['id'])
 	activity = get_activity(user, activity_id)
 	return activity.json()

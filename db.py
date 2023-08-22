@@ -3,7 +3,12 @@ import dbconnect
 def store_user(name, id, token, refresh_token, expires_at):
     userdb = dbconnect.connect_to_userdb()
     cursor = userdb.cursor()
-
+    user = (id, name, token, refresh_token, expires_at)
+    cursor.execute(
+        "REPLACE INTO USERS (id, name, token, refresh_token, expires_at)"
+        " VALUES (?, ?, ?, ?, ?)",
+        user
+    )
     userdb.close()
 
 def fetch_user(user_id):
