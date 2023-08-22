@@ -23,6 +23,8 @@ def create_app():
     )
 
     app.secret_key = os.environ.get('SECRET_KEY')
+    if not app.secret_key:
+        raise ValueError("No Secret Key was set in the create_app() method!!")
 
     @app.route("/webhook",methods=['POST', 'GET'])
     def webhook():
