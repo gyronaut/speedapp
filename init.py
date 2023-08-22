@@ -19,11 +19,12 @@ def create_app():
         CLIENT_ID = os.environ.get('STRAVA_CLIENT_ID'),
         CLIENT_SECRET = os.environ.get('STRAVA_CLIENT_SECRET'),
         REDIRECT_URI = 'http://www.gyronautilus.com/speedapp/loggedin',
-        VERIFY_TOKEN = "stravatokenshhh"
+        VERIFY_TOKEN = "stravatokenshhh",
+        SECRET_KEY = os.environ.get('SECRET_KEY')
     )
 
-    app.secret_key = os.environ.get('SECRET_KEY')
-    if not app.secret_key:
+    secret_key = os.environ.get('SECRET_KEY')
+    if not secret_key:
         raise ValueError("No Secret Key was set in the create_app() method!!")
 
     @app.route("/webhook",methods=['POST', 'GET'])
