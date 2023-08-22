@@ -6,7 +6,7 @@ def store_user(name, id, token, refresh_token, expires_at):
     user = (id, name, token, refresh_token, expires_at)
     cursor.execute(
         "REPLACE INTO USERS (id, name, token, refresh_token, expires_at)"
-        " VALUES (?, ?, ?, ?, ?)",
+        " VALUES (%s, %s, %s, %s, %s)",
         user
     )
     userdb.close()
