@@ -1,8 +1,8 @@
-import os
-from flask import Flask, request, render_template, redirect, jsonify, url_for
+from flask import Flask, request, render_template, redirect, url_for, session
 import urllib
 import requests as pyreq
 import init
+import db
 
 app = init.create_app()
 
@@ -18,10 +18,36 @@ def exchange_token(code):
 	)
 	return strava_req
 
-def get_activities(access_token):
+def token_expired(user):
+	return False
+
+def refresh_token(user):
+	return user
+
+def get_activities(user, page):
+	if token_expired(user):
+		user = refresh_token(user)
+	access_token = user['access_token']
 	strava_req = pyreq.get(
-		'https://www.strava.com/api/v3/athlete/activities?per_page=30',
-		headers={
+		'https://www.strava.com/api/v3/athlete/activities',
+		headers = {
+			'accept': 'application/json',
+			'authorization': 'Bearer '+access_token
+		},
+		params = {
+			'per-page':30,
+			'page':page
+		}
+	)
+	return strava_req
+
+def get_activity(user, activity_id):
+	if token_expired(user):
+		user = refresh_token(user)
+	access_token = user['access_token']
+	strava_req = pyreq.get(
+		'https://www.strava.com/api/v3/activities/{}'.format(activity_id),
+		headers = {
 			'accept': 'application/json',
 			'authorization': 'Bearer '+access_token
 		}
@@ -33,30 +59,43 @@ def splash():
 	testpost = {'heading': "testing title", 'body': 'testing body'}
 	return render_template('splash.html', post=testpost)
 
-@app.route("/loggedin/<int:user_id>")
 @app.route("/loggedin", methods=['GET'])
-def loggedin(user_id = None):
+def loggedin():
 	activities = []
 	name = 'No Name!'
-	if not user_id:
-		if request.method == "GET":
-			code = request.args.get('code')
-			if not code:
-				return "Missing code parameter!", 400		
-			strava_response = exchange_token(code).json()
-			name = strava_response['athlete']['firstname']
-			strava_user_id = strava_response['athlete']['id']
-			access_token = strava_response['access_token']
-			# store name, id, and user token in db
-			return redirect(url_for("loggedin", user_id = strava_user_id))
-		return redirect(url_for("splash"))
+	if request.method == "GET":
+		code = request.args.get('code')
+		if not code:
+			return redirect(url_for("splash"))
+		strava_response = exchange_token(code).json()
+		name = strava_response['athlete']['firstname']
+		strava_user_id = strava_response['athlete']['id']
+		access_token = strava_response['access_token']
+		refresh_token = strava_response['refresh_token']
+		expires_at = strava_response['expires_at']
+		session['id'] = strava_user_id
+		session['activity_page'] = 1
+		# store user info in db
+		db.store_user(name, strava_user_id, access_token, refresh_token, expires_at)
+		return redirect(url_for("activities", page=1))
+
+@app.route("/activities/<int:page>")
+def activities(page):
+	if not session['id']:
+		return redirect('/splash')
 	# get name and access token from db
 	name = "test"
-	access_token = ""
-	activities = get_activities(access_token).json()
+	user = db.fetch_user(session['id'])
+	if not user:
+		return redirect('/splash')
+	activities = get_activities(user, page).json()
 	return render_template("loggedin.html", name=name, activities=activities)
 
-
+@app.route("activities/<int:page>/<int:activity_id>", methods=['POST'])
+def show_activity(page, activity_id):
+	user = db.fetch_user(session['id'])
+	activity = get_activity(user, activity_id)
+	return activity.json()
 
 @app.route("/auth", methods=['GET'])
 def authorize():

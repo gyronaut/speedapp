@@ -22,6 +22,8 @@ def create_app():
         VERIFY_TOKEN = "stravatokenshhh"
     )
 
+    app.secret_key = os.environ.get('SECRET_KEY')
+
     @app.route("/webhook",methods=['POST', 'GET'])
     def webhook():
         if request.method == 'POST':
