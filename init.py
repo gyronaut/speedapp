@@ -20,10 +20,11 @@ def create_app():
         CLIENT_SECRET = os.environ.get('STRAVA_CLIENT_SECRET'),
         REDIRECT_URI = 'http://www.gyronautilus.com/speedapp/loggedin',
         VERIFY_TOKEN = "stravatokenshhh",
-        SECRET_KEY = os.environ.get('SECRET_KEY')
+        #SECRET_KEY = os.environ.get('SECRET_KEY')
+        SECRET_KEY = "testtesttest"
     )
 
-    secret_key = os.environ.get('SECRET_KEY')
+    secret_key = app.secret_key
     if not secret_key:
         raise ValueError("No Secret Key was set in the create_app() method!!")
 
