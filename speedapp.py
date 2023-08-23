@@ -85,13 +85,12 @@ def activities(page):
 		print("no session id!")
 		return redirect(url_for('splash'))
 	# get name and access token from db
-	name = "test"
 	user = db.fetch_user(session['id'])
 	if not user:
 		print("no user for user_id ", session['id'])
 		return redirect(url_for('splash'))
 	activities = get_activities(user, page, session['activities_per_page']).json()
-	return render_template("loggedin.html", page=page, name=name, activities=activities)
+	return render_template("loggedin.html", page=page, name=user['name'], activities=activities)
 
 @app.route("/_show_activity/<int:activity_id>", methods=['POST'])
 def show_activity( activity_id):
