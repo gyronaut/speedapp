@@ -20,7 +20,7 @@ def create_app():
         CLIENT_SECRET = os.environ.get('STRAVA_CLIENT_SECRET'),
         REDIRECT_URI = 'http://www.gyronautilus.com/speedapp/loggedin',
         VERIFY_TOKEN = "stravatokenshhh",
-        SECRET_KEY = os.environ.get('SECRET_KEY'),
+        SECRET_KEY = os.urandom(32),
         PER_PAGE = 15
     )
 
