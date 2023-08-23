@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for, session
 import urllib
-import datetime
+from datetime import datetime
 import requests as pyreq
 import init
 import db
