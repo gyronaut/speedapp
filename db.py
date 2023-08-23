@@ -16,7 +16,7 @@ def fetch_user(user_id):
     cursor = userdb.cursor()
     user = cursor.execute(
         "SELECT * FROM USERS "
-        "WHERE id = ?",
+        "WHERE id = %s",
         user_id
     )
     userdb.close()
