@@ -36,7 +36,7 @@ def get_activities(user, page, activities_per_page):
 			'authorization': 'Bearer '+access_token
 		},
 		params = {
-			'per-page': str(activities_per_page),
+			'per_page': str(activities_per_page),
 			'page': str(page)
 		}
 	)
@@ -85,7 +85,7 @@ def loggedin():
 		session['activities_per_page'] = 15
 		# store user info in db
 		db.store_user(name, strava_user_id, access_token, refresh_token, expires_at)
-		return redirect(url_for("activities", page=2))
+		return redirect(url_for("activities", page=1))
 
 @app.route("/activities/<int:page>")
 def activities(page):
