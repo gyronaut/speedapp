@@ -14,7 +14,7 @@
                     <th> Elapsed Time </th>
                 </tr>
                 {% for activity in activities %}
-                <tr>
+                <tr onclick="get_activity({{ activity['id'] }});">
                     <td>{{ activity['start_date']|strftime }}</td>
                     <td>{{ activity['name'] }}</td>
                     <td>{{ activity['type'] }}</td>

@@ -82,7 +82,7 @@ def loggedin():
 		refresh_token = strava_response['refresh_token']
 		expires_at = strava_response['expires_at']
 		session['id'] = strava_user_id
-		session['activities_per_page'] = 30
+		session['activities_per_page'] = 15
 		# store user info in db
 		db.store_user(name, strava_user_id, access_token, refresh_token, expires_at)
 		return redirect(url_for("activities", page=1))
@@ -101,7 +101,7 @@ def activities(page):
 	return render_template("loggedin.html", page=page, name=user['name'], activities=activities)
 
 @app.route("/_show_activity/<int:activity_id>", methods=['POST'])
-def show_activity( activity_id):
+def show_activity(activity_id):
 	user = db.fetch_user(session['id'])
 	activity = get_activity(user, activity_id)
 	return activity.json()
