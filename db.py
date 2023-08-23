@@ -19,7 +19,9 @@ def fetch_user(user_id):
         "WHERE id = %s",
         (user_id,)
     )
+    print(user)
     userdb.close()
+    print(user)
     return user
 
 def update_user(user_id, newuser):
