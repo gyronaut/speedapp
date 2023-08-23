@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for, session
 import urllib
+import datetime
 import requests as pyreq
 import init
 import db
@@ -53,6 +54,13 @@ def get_activity(user, activity_id):
 		}
 	)
 	return strava_req
+
+@app.template_filter('strftime')
+def _string_to_datetime(input, fmt=None):
+	date = datetime.strptime(input, "%Y-%m-%d %H:%M:%S")
+	if not fmt:
+		fmt = "%Y-%m-%d"
+	return date.strftime(fmt)
 
 @app.route("/")
 def splash():
