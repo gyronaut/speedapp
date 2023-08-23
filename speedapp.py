@@ -36,8 +36,8 @@ def get_activities(user, page, activities_per_page):
 			'authorization': 'Bearer '+access_token
 		},
 		params = {
-			'per-page': ''+activities_per_page,
-			'page': ''+page
+			'per-page': str(activities_per_page),
+			'page': str(page)
 		}
 	)
 	return strava_req
