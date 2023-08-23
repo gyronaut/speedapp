@@ -3,29 +3,36 @@
 {% block title %} Speed App {% endblock %}
 
 {% block content %}
-    <h1> Welcome {{ name }}!</h1>
-    <table>
-        <tr>
-            <th> Date </th>
-            <th> Activity Name </th>
-            <th> Activity Type </th>
-            <th> Elapsed Time </th>
-        </tr>
-    {% for activity in activities %}
-        <tr>
-            <th>{{activity['start_date']}}</th>
-            <th>{{activity['name']}}</th>
-            <th>{{activity['type']}}</th>
-            <th>{{activity['elapsed_time']}}</th>
-        </tr>
-    {% endfor %}
-    </table>
-    <div style="margin: auto; width: 50%; text-align: center;">
-        {% if page != 1%}
-            <a href="{{ url_for('activities', page=page-1) }}" >Previous</a> &emsp; &emsp;
-        {% endif %}
-        {% if activities|length == session['activities_per_page'] %}
-            <a href="{{ url_for('activities', page=page+1) }}" >Next</a>
-        {% endif %}
+    <div style="width: 50%; height: 80%;">
+        <h1> Welcome {{ name }}!</h1>
+        <div style="width: 100%; height: 80%; overflow: scroll">
+            <table>
+                <tr>
+                    <th> Date </th>
+                    <th> Activity Name </th>
+                    <th> Activity Type </th>
+                    <th> Elapsed Time </th>
+                </tr>
+                {% for activity in activities %}
+                <tr>
+                    <td>{{ activity['start_date'].strftime('%Y-%m-%d') }}</td>
+                    <td>{{ activity['name'] }}</td>
+                    <td>{{ activity['type'] }}</td>
+                    <td>{{ activity['elapsed_time']//60 }} min</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div style="margin: auto; width: 50%; text-align: center;">
+            {% if page != 1%}
+            <a href="{{ url_for('activities', page=page-1) }}">Previous</a> &emsp; &emsp;
+            {% endif %}
+            {% if activities|length == session['activities_per_page'] %}
+            <a href="{{ url_for('activities', page=page+1) }}">Next</a>
+            {% endif %}
+        </div>
+    </div>
+    <div id="data" style="width: 50%; height: 80%;">
+
     </div>
 {% endblock %}
