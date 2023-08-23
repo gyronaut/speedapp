@@ -15,7 +15,7 @@
                 </tr>
                 {% for activity in activities %}
                 <tr>
-                    <td>{{ activity['start_date'].strftime('%Y-%m-%d') }}</td>
+                    <td>{{ activity['start_date']|strftime }}</td>
                     <td>{{ activity['name'] }}</td>
                     <td>{{ activity['type'] }}</td>
                     <td>{{ activity['elapsed_time']//60 }} min</td>
