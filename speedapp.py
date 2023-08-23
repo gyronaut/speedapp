@@ -82,12 +82,14 @@ def loggedin():
 @app.route("/activities/<int:page>")
 def activities(page):
 	if not session['id']:
-		return redirect('/splash')
+		print("no session id!")
+		return redirect(url_for('splash'))
 	# get name and access token from db
 	name = "test"
 	user = db.fetch_user(session['id'])
 	if not user:
-		return redirect('/splash')
+		print("no user for user_id ", session['id'])
+		return redirect(url_for('splash'))
 	activities = get_activities(user, page, session['activities_per_page']).json()
 	return render_template("loggedin.html", page=page, name=name, activities=activities)
 
