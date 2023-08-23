@@ -22,7 +22,7 @@
     </table>
     <div style="margin: auto; width: 50%; text-align: center;">
         {% if page != 1%}
-            <a href="{{ url_for('activities', page=page-1) }}" >Previous</a> &emsp &emsp
+            <a href="{{ url_for('activities', page=page-1) }}" >Previous</a> &emsp; &emsp;
         {% endif %}
         {% if activities|length == session['activities_per_page'] %}
             <a href="{{ url_for('activities', page=page+1) }}" >Next</a>
