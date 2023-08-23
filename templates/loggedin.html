@@ -24,7 +24,7 @@
         {% if page != 1%}
             <a href="{{ url_for('activities', page=session['page']-1) }}" >  Previous  </a>
         {% endif %}
-        {% if length(activities) == session['activities_per_page'] %}
+        {% if activities|length == session['activities_per_page'] %}
             <a href="{{ url_for('activities', page=session['page']+1) }}" >  Next  </a>
         {% endif %}
     </div>
