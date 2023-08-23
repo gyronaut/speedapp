@@ -57,7 +57,7 @@ def get_activity(user, activity_id):
 
 @app.template_filter('strftime')
 def _string_to_datetime(input, fmt=None):
-	date = datetime.strptime(input, "%Y-%m-%d %H:%M:%S")
+	date = datetime.strptime(input, "%Y-%m-%dT%H:%M:%SZ")
 	if not fmt:
 		fmt = "%Y-%m-%d"
 	return date.strftime(fmt)
