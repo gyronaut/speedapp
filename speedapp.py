@@ -27,7 +27,7 @@ def refresh_token(user):
 def get_activities(user, page, activities_per_page):
 	if token_expired(user):
 		user = refresh_token(user)
-	access_token = user['access_token']
+	access_token = user['token']
 	strava_req = pyreq.get(
 		'https://www.strava.com/api/v3/athlete/activities',
 		headers = {
@@ -44,7 +44,7 @@ def get_activities(user, page, activities_per_page):
 def get_activity(user, activity_id):
 	if token_expired(user):
 		user = refresh_token(user)
-	access_token = user['access_token']
+	access_token = user['token']
 	strava_req = pyreq.get(
 		'https://www.strava.com/api/v3/activities/{}'.format(activity_id),
 		headers = {
