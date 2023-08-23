@@ -13,15 +13,14 @@ def store_user(name, id, token, refresh_token, expires_at):
 
 def fetch_user(user_id):
     userdb = dbconnect.connect_to_userdb()
-    cursor = userdb.cursor()
-    user = cursor.execute(
+    cursor = userdb.cursor(dictionary=True)
+    cursor.execute(
         "SELECT * FROM USERS "
         "WHERE id = %s",
         (user_id,)
     )
-    print(user)
+    user = cursor.fetchone()
     userdb.close()
-    print(user)
     return user
 
 def update_user(user_id, newuser):
