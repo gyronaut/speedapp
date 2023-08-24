@@ -19,3 +19,10 @@ body {
     border-radius: 8px;
     padding: 2em;
 }
+
+.no_data_text{
+    font-weight: bold;
+    font-size: 1.5em;
+    text-align: center;
+    vertical-align: center;
+}

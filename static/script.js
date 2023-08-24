@@ -1,5 +1,5 @@
 function get_activity(id) {
-    document.getElementById("data").innerHTML = "<p style='font-weight: bold; font-size: 2em;'> Fetching Activity... <\p>"
+    document.getElementById("data").innerHTML = "<p class='no_data_text'> Fetching Activity... <\p>"
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState ==4 && this.status == 200) {
