@@ -5,6 +5,6 @@ function get_activity(id) {
             document.getElementById("data").innerHTML = this.responseText;
         }
     }
-    xhttp.open("POST", `/activities/${id}`, true);
+    xhttp.open("POST", `/_show_activity/${id}`, true);
     xhttp.send();
 }
