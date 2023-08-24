@@ -3,7 +3,7 @@
 {% block title %} Speed App {% endblock %}
 
 {% block content %}
-    <div style="width: 45%; display: inline-block;">
+    <div style="width: 45%; display: inline-block; vertical-align: top;">
         <h1> Welcome {{ name }}!</h1>
         <div style="width: 100%;">
             <table style="width: 100%;">
@@ -14,7 +14,7 @@
                     <th> Elapsed Time </th>
                 </tr>
                 {% for activity in activities %}
-                <tr onclick="get_activity({{ activity['id'] }});">
+                <tr onclick="get_activity({{ activity['id'] }});" style="cursor:pointer;">
                     <td>{{ activity['start_date']|strftime }}</td>
                     <td>{{ activity['name'] }}</td>
                     <td>{{ activity['type'] }}</td>
@@ -32,7 +32,7 @@
             {% endif %}
         </div>
     </div>
-    <div id="data" style="width: 50%; display:inline-block;">
+    <div id="data" style="width: 50%; display:inline-block; vertical-align: top;">
         <p>No data yet!</p>
     </div>
     
