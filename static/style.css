@@ -18,5 +18,5 @@ body {
     border: solid 1px #c0c0c0;
     border-radius: 8px;
     padding: 2em;
-    overflow:hidden;
+    overflow:auto;
 }
