@@ -60,7 +60,7 @@ def get_activity(user, activity_id):
 	return strava_req
 
 def process_activity(activity):
-	return activity
+	return activity.json()
 
 @app.template_filter('strftime')
 def _string_to_datetime(input, fmt=None):
