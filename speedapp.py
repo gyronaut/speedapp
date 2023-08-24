@@ -47,13 +47,20 @@ def get_activity(user, activity_id):
 		user = refresh_token(user)
 	access_token = user['token']
 	strava_req = pyreq.get(
-		'https://www.strava.com/api/v3/activities/{}'.format(activity_id),
+		'https://www.strava.com/api/v3/activities/{}/streams'.format(activity_id),
 		headers = {
 			'accept': 'application/json',
 			'authorization': 'Bearer '+access_token
+		},
+		params = {
+			'keys': 'time,latling,altitude,velocity_smooth',
+			'key_by_type': True
 		}
 	)
 	return strava_req
+
+def process_activity(activity):
+	return activity
 
 @app.template_filter('strftime')
 def _string_to_datetime(input, fmt=None):
@@ -104,7 +111,8 @@ def activities(page):
 def show_activity(activity_id):
 	user = db.fetch_user(session['id'])
 	activity = get_activity(user, activity_id)
-	return activity.json()
+	data = process_activity(activity)
+	return render_template("data.html", data=data)
 
 @app.route("/auth", methods=['GET'])
 def authorize():
