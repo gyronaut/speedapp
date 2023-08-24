@@ -3,7 +3,7 @@
 {% block title %} Speed App {% endblock %}
 
 {% block content %}
-    <div style="width: 50%; float: left;">
+    <div style="width: 45%; float: left;">
         <h1> Welcome {{ name }}!</h1>
         <div style="width: 100%;">
             <table style="width: 100%;">
@@ -23,7 +23,7 @@
                 {% endfor %}
             </table>
         </div>
-        <div style="margin: auto; width: 50%; text-align: center;">
+        <div style="margin: auto; width: 45%; text-align: center;">
             {% if page != 1%}
             <a href="{{ url_for('activities', page=page-1) }}">Previous</a> &emsp; &emsp;
             {% endif %}

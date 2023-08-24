@@ -53,7 +53,7 @@ def get_activity(user, activity_id):
 			'authorization': 'Bearer '+access_token
 		},
 		params = {
-			'keys': 'time,latling,altitude,velocity_smooth',
+			'keys': 'time,latlong,altitude,velocity_smooth',
 			'key_by_type': True
 		}
 	)
