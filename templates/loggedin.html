@@ -23,7 +23,7 @@
                 {% endfor %}
             </table>
         </div>
-        <div style="margin: auto; width: 45%; text-align: center;">
+        <div style="margin: auto; width: 50%; text-align: center;">
             {% if page != 1%}
             <a href="{{ url_for('activities', page=page-1) }}">Previous</a> &emsp; &emsp;
             {% endif %}
@@ -32,7 +32,7 @@
             {% endif %}
         </div>
     </div>
-    <div id="data" style="width: 50%;">
+    <div id="data" style="width: 45%;">
         <p>No data yet!</p>
     </div>
     
