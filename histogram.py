@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 class Histogram:
 
@@ -24,11 +24,11 @@ class Histogram:
         self.data[bin] += weight
         return 0
     
-    def plot(self):
-        plt.bar(self.bincenters, self.data, width=self.binwidth, align='center')
-        plt.ylabel(self.y_label)
-        plt.xlabel(self.x_label)
-        plt.show()
+#    def plot(self):
+#        plt.bar(self.bincenters, self.data, width=self.binwidth, align='center')
+#        plt.ylabel(self.y_label)
+#        plt.xlabel(self.x_label)
+#        plt.show()
     
     def rebin(self, factor):
         if(type(factor)!=int or factor <= 0):
