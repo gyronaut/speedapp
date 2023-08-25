@@ -108,7 +108,7 @@ def activities(page):
 @app.route("/_show_activity/<int:activity_id>", methods=['POST'])
 def show_activity(activity_id):
 	user = db.fetch_user(session['id'])
-	activity = get_activity(user, activity_id)
+	activity = get_activity(user, activity_id).json()
 	results = processing.process_strava_stream(activity)
 	data = zip(results[0].data, results[1].data)
 	return render_template("data.html", data=data)
