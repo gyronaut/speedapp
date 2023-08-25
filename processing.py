@@ -4,6 +4,9 @@ from datetime import timedelta
 import numpy as np
 import histogram as h
 
+#conversion between m/s to miles/hour
+MPS_TO_MILESPERHOUR = 2.23694
+
 def load_gpx():
     filename = 'C:/Users/JB/Downloads/Lunch_Run.gpx'
     gpx_file = open(filename, 'r')
@@ -27,13 +30,12 @@ def great_circle_distance(end_lat, end_long, start_lat, start_long):
 
 
 def gpx_to_speed(datapoints):
-    conversion_factor = 2.23694 #conversion between m/s to miles/hour
     speedpoints = []
     for point_end, point_start in zip(datapoints[1:], datapoints):
         dist = great_circle_distance(point_end.latitude, point_end.longitude, point_start.latitude, point_start.longitude)
         dist = np.sqrt(np.power(dist, 2) + np.power(point_end.elevation - point_start.elevation, 2))
         time = (point_end.time - point_start.time)/timedelta(seconds=1)
-        speed_point = {'speed': conversion_factor*dist/time, 'interval': time}
+        speed_point = {'speed': MPS_TO_MILESPERHOUR*dist/time, 'interval': time}
         speedpoints.append(speed_point)
     return speedpoints
 
@@ -53,4 +55,15 @@ def process_strava_stream(activity):
     strava_velocity = activity['velocity_smooth']['data']
     latlng = activity['latlng']['data']
     distance = activity['distance']['data']
-
+    timediff = [time2-time1 for time2, time1 in zip(time[1:], time)]
+    speedpoints = [{'speed': v*MPS_TO_MILESPERHOUR, 'interval': t} for v, t in zip(strava_velocity[1:], timediff)]
+    distdiff = [dist2-dist1 for dist2, dist1 in zip(distance[1:], distance)]
+    speedpoints2 = [{'speed':MPS_TO_MILESPERHOUR*d/t, 'interval': t} for d, t in zip(distdiff, timediff)]
+    h1 = h.Histogram(low=0, high=50, numbins=10, x_label="mph", y_label="minutes")
+    h2 = h.Histogram(low=0, high=50, numbins=10, x_label="mph", y_label="minutes")
+    for point1, point2 in zip(speedpoints, speedpoints2):
+        h1.fill(point1['speed'], point1['interval'])
+        h2.fill(point2['speed'], point2['interval'])
+    h1.scale(1.0/60.0)
+    h2.scale(1.0/60.0)
+    return [h1, h2]

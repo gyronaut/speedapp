@@ -4,6 +4,7 @@ from datetime import datetime
 import requests as pyreq
 import init
 import db
+import processing
 
 app = init.create_app()
 
@@ -59,9 +60,6 @@ def get_activity(user, activity_id):
 	)
 	return strava_req
 
-def process_activity(activity):
-	return activity.json()
-
 @app.template_filter('strftime')
 def _string_to_datetime(input, fmt=None):
 	date = datetime.strptime(input, "%Y-%m-%dT%H:%M:%SZ")
@@ -111,7 +109,8 @@ def activities(page):
 def show_activity(activity_id):
 	user = db.fetch_user(session['id'])
 	activity = get_activity(user, activity_id)
-	data = process_activity(activity)
+	results = processing.process_strava_stream(activity)
+	data = zip(results[0].data, results[1].data)
 	return render_template("data.html", data=data)
 
 @app.route("/auth", methods=['GET'])
