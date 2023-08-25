@@ -48,8 +48,8 @@ def process_gpx():
         speeddata.append(point['speed'])
         histogram.fill(point['speed'], point['interval'])
     histogram = histogram.rebin(5)
-    histogram.plot() 
-    
+    return histogram
+
 def process_strava_stream(activity):
     time = activity['time']['data']
     strava_velocity = activity['velocity_smooth']['data']
