@@ -51,6 +51,8 @@ def process_gpx():
     return histogram
 
 def process_strava_stream(activity):
+    if not activity['velocity_smooth']:
+        return None
     time = activity['time']['data']
     strava_velocity = activity['velocity_smooth']['data']
     latlng = activity['latlng']['data']

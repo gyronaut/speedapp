@@ -110,6 +110,8 @@ def show_activity(activity_id):
 	user = db.fetch_user(session['id'])
 	activity = get_activity(user, activity_id).json()
 	results = processing.process_strava_stream(activity)
+	if not results:
+		return 'No data found', 400
 	data = zip(results[0].data, results[1].data)
 	return render_template("data.html", data=data)
 
