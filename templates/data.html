@@ -1,5 +1,4 @@
 <div>
-    {{ data.data }}
     <table>
         <tr>
             {% for i in range(0, data.data|length) %}
@@ -8,7 +7,7 @@
         </tr>
         <tr>
             {% for bin in data.data %}
-                <td>{{ bin }} {{ data.y_label }}</td>
+                <td>{{ bin|round }} {{ data.y_label }}</td>
             {% endfor %}
         </tr>
     </table>
