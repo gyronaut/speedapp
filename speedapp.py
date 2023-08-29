@@ -103,6 +103,8 @@ def activities(page):
 		print("no user for user_id ", session['id'])
 		return redirect(url_for('splash'))
 	activities = get_activities(user, page, session['activities_per_page']).json()
+	if activities['error']:
+		redirect(url_for("splash"))
 	return render_template("loggedin.html", page=page, name=user['name'], activities=activities)
 
 @app.route("/_show_activity/<int:activity_id>", methods=['POST'])
@@ -112,8 +114,7 @@ def show_activity(activity_id):
 	results = processing.process_strava_stream(activity)
 	if not results:
 		return 'No data found', 400
-	data = zip(results[0].data, results[1].data)
-	return render_template("data.html", data=data)
+	return render_template("data.html", data=results[0])
 
 @app.route("/auth", methods=['GET'])
 def authorize():
