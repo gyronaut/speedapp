@@ -103,7 +103,7 @@ def activities(page):
 		print("no user for user_id ", session['id'])
 		return redirect(url_for('splash'))
 	activities = get_activities(user, page, session['activities_per_page']).json()
-	if activities['error']:
+	if type(activities) == dict and activities['error']:
 		redirect(url_for("splash"))
 	return render_template("loggedin.html", page=page, name=user['name'], activities=activities)
 
