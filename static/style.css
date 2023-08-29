@@ -10,14 +10,14 @@ html,
 body {
     font-family: sans-serif;
     background: #f0f0f0;
-    margin: 10%;
+    margin: 3%;
 }
 
 .main {
     background: white;
     border: solid 1px #c0c0c0;
     border-radius: 8px;
-    padding: 5%;
+    padding: 2%;
 }
 
 .no_data_text{
