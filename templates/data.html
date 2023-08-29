@@ -1,3 +1,15 @@
 <div>
-    {{ data }}
+    {{ data[0].data }}
+    <table>
+        <tr>
+            {{% for i in range(0, data[0].numbins) %}}
+                <th>{{ data[0].low + i*data[0].binwidth }} - {{ data[0].low + (i+1)*data[0].binwidth }} {{ data[0].x_label }}</th>
+            {{% endfor %}}
+        </tr>
+        <tr>
+            {{% for bin in data[0].data %}}
+                <td>{{ bin }} {{ data[0].y_label }}</td>
+            {{% endfor %}}
+        </tr>
+    </table>
 </div>
